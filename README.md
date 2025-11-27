@@ -28,7 +28,7 @@
 
 ### 方式一：在线直接使用（推荐）
 访问本项目的 GitHub Pages 链接：
-> **[点击这里开始阅读](https://你的用户名.github.io/仓库名/reader.html)**
+> **[点击这里开始阅读](https://rachellzw.github.io/-/)**
 > *(注意：请将此处链接替换为你实际开启 GitHub Pages 后的地址)*
 
 ### 方式二：下载离线使用
