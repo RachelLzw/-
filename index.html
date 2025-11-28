@@ -12,7 +12,7 @@
             --accent-color: #5d5d5d;
             --sidebar-bg: #eeeeee;
             --sidebar-hover: #e0e0e0;
-            --active-toc-bg: rgba(0,0,0,0.08); /* 目录高亮背景 */
+            --active-toc-bg: rgba(0,0,0,0.08);
             --status-bg: rgba(255, 255, 255, 0.9);
             --status-text: #666;
             --font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -110,11 +110,10 @@
             color: var(--text-color);
             transition: background 0.2s;
             line-height: 1.5;
-            border-left: 4px solid transparent; /* 预留边框位置 */
+            border-left: 4px solid transparent; 
         }
         .toc-item:hover { background-color: var(--sidebar-hover); color: var(--accent-color); font-weight: 500; }
         
-        /* 目录激活状态样式 */
         .toc-active { 
             background-color: var(--active-toc-bg); 
             font-weight: bold; 
@@ -194,7 +193,6 @@
         }
         .theme-btn:hover { transform: scale(1.2); }
 
-        /* 夜间模式适配 */
         .dark-mode .toolbar { background: #1f1f1f; border-bottom: 1px solid #333; }
         .dark-mode button, .dark-mode select { background: #333; border-color: #444; color: #ccc; }
         .dark-mode .sidebar { background: #1a1a1a; border-right: 1px solid #333; }
@@ -229,6 +227,7 @@
                 <option value="'PingFang SC', 'Microsoft YaHei', sans-serif">黑体</option>
                 <option value="'Songti SC', 'SimSun', 'STSong', serif">宋体</option>
                 <option value="'KaiTi', '楷体', 'STKaiti', '华文楷体', serif">楷体</option>
+                <option value="'Chill Old Song', 'HanChanHuoSong', '寒蝉活宋体', serif">寒蝉活宋体</option>
             </select>
             <button onclick="adjustSize(-1)">A-</button>
             <button onclick="adjustSize(1)">A+</button>
@@ -280,7 +279,7 @@
         let currentSize = 18;
         let totalChapters = 0;
         let chapterPositions = [];
-        let lastActiveChapter = 0; // 用于避免重复刷新UI
+        let lastActiveChapter = 0; 
 
         fileInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -312,7 +311,6 @@
                 totalChapters++;
                 const id = 'chapter-' + totalChapters;
                 const cleanTitle = match.trim();
-                // 增加了 id="toc-X" 以便后续查找
                 tocHtml += `<li class="toc-item" id="toc-${totalChapters}" onclick="jumpTo('${id}', ${totalChapters})">${cleanTitle}</li>`;
                 return `<span id="${id}" class="chapter-title" data-index="${totalChapters}">${match}</span>`;
             });
@@ -327,7 +325,6 @@
 
             statusBar.style.display = 'flex';
             
-            // 重置状态
             lastActiveChapter = 0;
             setTimeout(() => {
                 cacheChapterPositions();
@@ -360,16 +357,13 @@
             const scrollHeight = contentArea.scrollHeight;
             const clientHeight = contentArea.clientHeight;
 
-            // 1. 计算阅读百分比
             let percent = 0;
             if(scrollHeight > clientHeight) {
                 percent = Math.round((scrollTop / (scrollHeight - clientHeight)) * 100);
             }
             document.getElementById('statusProgress').innerText = percent + "%";
 
-            // 2. 查找当前所在章节
             let currentIdx = 1;
-            // 偏移量 150px：当标题进入屏幕顶部区域时即视为进入该章
             const offset = 150; 
             
             for (let i = 0; i < chapterPositions.length; i++) {
@@ -382,7 +376,6 @@
             
             document.getElementById('statusChapter').innerText = `第 ${currentIdx} / ${totalChapters} 章`;
 
-            // 3. 高亮目录 (仅当章节变化时才执行DOM操作，优化性能)
             if (currentIdx !== lastActiveChapter) {
                 highlightSidebar(currentIdx);
                 lastActiveChapter = currentIdx;
@@ -390,15 +383,12 @@
         }
 
         function highlightSidebar(index) {
-            // 移除旧的高亮
             const activeItems = document.querySelectorAll('.toc-active');
             activeItems.forEach(el => el.classList.remove('toc-active'));
 
-            // 添加新的高亮
             const newItem = document.getElementById('toc-' + index);
             if (newItem) {
                 newItem.classList.add('toc-active');
-                // 自动滚动目录，确保当前章节可见 (block: 'nearest' 体验最好)
                 newItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         }
@@ -407,9 +397,7 @@
             const element = document.getElementById(id);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                // 移动端点击后收起侧栏
                 if(window.innerWidth < 768) toggleSidebar();
-                // 立即触发高亮，不要等滚动事件
                 highlightSidebar(index);
                 lastActiveChapter = index; 
             }
